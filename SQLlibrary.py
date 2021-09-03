@@ -1,4 +1,5 @@
 from sys import getsizeof
+
 def checkmysqltype (entry):
 	try:
 		int(entry)

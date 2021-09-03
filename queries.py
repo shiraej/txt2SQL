@@ -1,6 +1,5 @@
-#!/usr/bin/python3.4
 from MySQLconnect import connect
-import mysql.connector
+#import mysql.connector
 
 def selectonequery(configfile, section, sqlquery):
 	'''connects to a mysql database and makes a query to that database. Need to input a configuration 
@@ -9,6 +8,8 @@ def selectonequery(configfile, section, sqlquery):
 	cursor = cnxn.cursor()
 	cursor.execute(sqlquery)
 	result = cursor.fetchone()
+	cursor.close()
+	cnxn.close()
 	return result
 
 def selectquery(configfile, section, tabletitle, headers, whereheadsvals):
@@ -20,6 +21,8 @@ def selectquery(configfile, section, tabletitle, headers, whereheadsvals):
 	query = "SELECT {0} FROM {1} WHERE {2}".format(headers, tabletitle, conditional)
 	cursor.execute(query, whereheadsvals)
 	result = cursor.fetchone()
+	cursor.close()
+	cnxn.close()
 	return result
 
 def selectallquery(configfile, section, tabletitle, headers, whereheadsvals):
@@ -31,15 +34,14 @@ def selectallquery(configfile, section, tabletitle, headers, whereheadsvals):
 	query = "SELECT {0} FROM {1} WHERE {2}".format(headers, tabletitle, conditional)
 	cursor.execute(query, whereheadsvals)
 	result = cursor.fetchall()
+	cursor.close()
+	cnxn.close()
 	return result
 
 def createtable (configfile, section, tabletitle, headers):
 	cnxn = connect(configfile, section)
 	cursor = cnxn.cursor()
 	query = "CREATE TABLE %s (%s);" % (tabletitle, headers)
-	#####
-	print (query)
-	#####
 	cursor.execute (query)
 	cnxn.commit()
 	cursor.close()
@@ -61,7 +63,7 @@ def deleteallrows(configfile, section, tabletitle):
 	cnxn = connect(configfile, section)
 	cursor = cnxn.cursor()
 	query = "DELETE FROM %s" %tabletitle
-	cursor.execute (query)#need to bind variable
+	cursor.execute (query)
 	cnxn.commit()
 	cursor.close()
 	cnxn.close()
